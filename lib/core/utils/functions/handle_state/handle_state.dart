@@ -131,7 +131,7 @@ class HandleState {
             textAlign: TextAlign.center,
             maxLines: 3,
             style: TextStyle(
-              fontSize: 25,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.black
             ),

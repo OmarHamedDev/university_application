@@ -32,8 +32,8 @@ class _LogInScreenState extends State<LogInScreen> {
       create: (context) => loginViewModel,
       child: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
-            _handleBlocListenerLoginState(state);
-         },
+          _handleBlocListenerLoginState(state);
+        },
         child: Scaffold(
           backgroundColor: Colors.white,
           body: Form(
@@ -169,7 +169,8 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   void _goNextToBaseScreen() async {
-      await context.appConfigProvider.initializeAppConfig();
-     Navigator.pushNamedAndRemoveUntil(context,  StdHomeScreen.routeName,(route) => false,);
+    await context.appConfigProvider.initializeAppConfig();
+    var initialRoute = context.appConfigProvider.getInitialPageRouteName();
+    Navigator.pushNamedAndRemoveUntil(context, initialRoute, (route) => false);
   }
 }

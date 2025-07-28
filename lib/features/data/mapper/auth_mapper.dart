@@ -9,6 +9,8 @@ abstract class AuthMapper {
   AppUserEntity mapAppUserLocalModelToEntity(
     AppUserLocalModel appUserLocalModel,
   );
+
+  AppUserEntity mapUserToAppUserEntity(User user);
 }
 
 @Injectable(as: AuthMapper)
@@ -53,6 +55,19 @@ class AuthMapperImpl implements AuthMapper {
       major: appUserLocalModel.major,
       phoneNumber: appUserLocalModel.phoneNumber,
       profilePhoto: appUserLocalModel.profilePhoto,
+    );
+  }
+
+  @override
+  AppUserEntity mapUserToAppUserEntity(User user)  {
+    return AppUserEntity(
+      id: 0,
+      email: user.email ?? "",
+      fullName: user.name ?? "",
+      role: user.type ?? "",
+      major: user.major ?? "",
+      phoneNumber: user.phoneNumber,
+      profilePhoto: user.profilePhoto,
     );
   }
 }

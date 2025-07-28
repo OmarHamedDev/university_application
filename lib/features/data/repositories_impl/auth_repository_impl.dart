@@ -1,5 +1,4 @@
-
-
+import 'package:dio/src/multipart_file.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/api/network/common/execute_method.dart';
@@ -22,60 +21,100 @@ class AuthRepositoryImpl implements AuthRepository {
     return executeMethod<AppUserEntity>(
       callMethod: () async {
         var result = await _authRemoteDataSource.login(loginRequest);
-        _authOfflineDataSource.saveToken(token: result.$2);
-        _authOfflineDataSource.saveRole(role: result.$1.role);
-        _authOfflineDataSource.saveAppUser(appUserEntity: result.$1);
+        await _authOfflineDataSource.saveToken(token: result.$2);
+        await _authOfflineDataSource.saveRole(role: result.$1.role);
+        await _authOfflineDataSource.saveAppUser(appUserEntity: result.$1);
         return result.$1;
       },
     );
   }
 
-//   @override
-//   Future<Result<AppUserEntity>> register(
-//       {required RegisterRequest registerRequest}) {
-//     return executeMethod<AppUserEntity>(
-//       callMethod: () async {
-//         var result = await _authRemoteDataSource.register(registerRequest);
-//         _authOfflineDataSource.saveToken(token: result.$2);
-//         _authOfflineDataSource.saveRole(role: result.$1.role);
-//         _authOfflineDataSource.saveAppUser(appUserEntity: result.$1);
-//         return result.$1;
-//       },
-//     );
-//   }
-//
-//   @override
-//   Future<Result<bool>> changePassword(
-//       {required ChangePasswordRequest changePasswordRequest}) {
-//     // TODO: implement changePassword
-//     throw UnimplementedError();
-//   }
-//
-//   @override
-//   Future<Result<SuccessAuthEntity>> forgetPassword(
-//       {required ForgetPasswordRequest forgetPasswordRequest}) {
-//     // TODO: implement forgetPassword
-//     throw UnimplementedError();
-//   }
-//
-//   @override
-//   Future<Result<bool>> logOut() {
-//     // TODO: implement logOut
-//     throw UnimplementedError();
-//   }
-//
-//   @override
-//   Future<Result<SuccessAuthEntity>> resetPassword(
-//       {required ResetPasswordRequest resetPasswordRequest}) {
-//     // TODO: implement resetPassword
-//     throw UnimplementedError();
-//   }
-//
-//   @override
-//   Future<Result<SuccessAuthEntity>> verifyResetCode(
-//       {required VerifyResetCodeRequest verifyRestCode}) {
-//     // TODO: implement verifyResetCode
-//     throw UnimplementedError();
-//   }
-// }
+  @override
+  Future<Result<AppUserEntity>> getAppUser() async {
+    return executeMethod<AppUserEntity>(
+      callMethod: () async {
+        var result = await _authRemoteDataSource.getAppUser();
+        return result;
+      },
+    );
+  }
+
+  @override
+  Future<Result<String>> logout() async {
+    return executeMethod<String>(
+      callMethod: () async {
+        var result = await _authRemoteDataSource.logout();
+        return result;
+      },
+    );
+  }
+
+  @override
+  Future<Result<String>> deletePhoto() async {
+    return executeMethod<String>(
+      callMethod: () async {
+        var result = await _authRemoteDataSource.deletePhoto();
+        return result;
+      },
+    );
+  }
+
+  @override
+  Future<Result<String>> updatePhoto(List<MultipartFile> photo) async {
+    return executeMethod<String>(
+      callMethod: () async {
+        var result = await _authRemoteDataSource.updatePhoto(photo);
+        return result;
+      },
+    );
+  }
+
+  //   @override
+  //   Future<Result<AppUserEntity>> register(
+  //       {required RegisterRequest registerRequest}) {
+  //     return executeMethod<AppUserEntity>(
+  //       callMethod: () async {
+  //         var result = await _authRemoteDataSource.register(registerRequest);
+  //         _authOfflineDataSource.saveToken(token: result.$2);
+  //         _authOfflineDataSource.saveRole(role: result.$1.role);
+  //         _authOfflineDataSource.saveAppUser(appUserEntity: result.$1);
+  //         return result.$1;
+  //       },
+  //     );
+  //   }
+  //
+  //   @override
+  //   Future<Result<bool>> changePassword(
+  //       {required ChangePasswordRequest changePasswordRequest}) {
+  //     // TODO: implement changePassword
+  //     throw UnimplementedError();
+  //   }
+  //
+  //   @override
+  //   Future<Result<SuccessAuthEntity>> forgetPassword(
+  //       {required ForgetPasswordRequest forgetPasswordRequest}) {
+  //     // TODO: implement forgetPassword
+  //     throw UnimplementedError();
+  //   }
+  //
+  //   @override
+  //   Future<Result<bool>> logOut() {
+  //     // TODO: implement logOut
+  //     throw UnimplementedError();
+  //   }
+  //
+  //   @override
+  //   Future<Result<SuccessAuthEntity>> resetPassword(
+  //       {required ResetPasswordRequest resetPasswordRequest}) {
+  //     // TODO: implement resetPassword
+  //     throw UnimplementedError();
+  //   }
+  //
+  //   @override
+  //   Future<Result<SuccessAuthEntity>> verifyResetCode(
+  //       {required VerifyResetCodeRequest verifyRestCode}) {
+  //     // TODO: implement verifyResetCode
+  //     throw UnimplementedError();
+  //   }
+  // }
 }

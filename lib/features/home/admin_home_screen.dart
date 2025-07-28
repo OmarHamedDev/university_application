@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hti_university_app_1/core/extension/extension.dart';
+import 'package:hti_university_app_1/features/presentation/home/ad_home/menu_tab/create_single_user/view/create_single_user.dart';
 
 import '../../core/utils/constants/App_colors.dart';
+import '../presentation/home/ad_home/menu_tab/upload_sheet/view/update sheet.dart';
 import '../presentation/login/view/log_in.dart';
 import 'admin_hom_tabs/admin_decomantion.dart';
-import 'admin_hom_tabs/admin_events.dart';
+import '../presentation/home/ad_home/event_tab/view/admin_events.dart';
 import '../presentation/home/ad_home/news_tab/view/admin_news.dart';
-import 'admin_hom_tabs/admin_requestes.dart';
-import 'admin_hom_tabs/menu/accepted request.dart';
-import 'admin_hom_tabs/menu/manage request.dart';
-import 'admin_hom_tabs/menu/rejected request.dart';
-import 'admin_hom_tabs/profile/admin_profile.dart';
+import '../presentation/home/ad_home/requests/view/admin_requestes.dart';
+import '../presentation/home/ad_home/menu_tab/accepted_request/view/accepted request.dart';
+import '../presentation/home/ad_home/menu_tab/manage_request/view/manage request.dart';
+import '../presentation/home/ad_home/menu_tab/rejected_request/view/rejected request.dart';
+import '../presentation/home/ad_home/profile/view/admin_profile.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   static const String routeName = 'admin';
@@ -62,43 +65,68 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
                     Divider(),
 
                     /// Menu Items
-                    _buildMenuItem(Icons.add_box_outlined, 'Manage request',
-                        () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ManageRequests(),
-                      ));
-                    }),
                     _buildMenuItem(
-                        Icons.check_circle_outline, 'Accepted request', () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AcceptedRequests(),
-                      ));
-                    }),
-                    _buildMenuItem(Icons.cancel_outlined, 'Rejected request',
-                        () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RejectedRequests(),
-                      ));
-                    }),
+                      Icons.add_box_outlined,
+                      'Manage request',
+                      () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ManageRequests(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildMenuItem(
+                      Icons.check_circle_outline,
+                      'Accepted request',
+                      () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AcceptedRequests(),
+                          ),
+                        );
+                      },
+                    ),
+                    _buildMenuItem(
+                      Icons.cancel_outlined,
+                      'Rejected request',
+                      () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RejectedRequests(),
+                          ),
+                        );
+                      },
+                    ),
                     _buildMenuItem(Icons.update, 'Update Sheet', () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdateSheetView(),
+                        ),
+                      );
+                    }),
+                    _buildMenuItem(Icons.update, 'Create User', () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateSingleUser(),
+                        ),
+                      );
                     }),
 
-                    SizedBox(
-                      height: 50,
-                    ),
+                    SizedBox(height: 50),
 
                     /// Logout
                     _buildMenuItem(Icons.logout, 'Logout', () {
-                      Navigator.of(context).pushNamed(LogInScreen.routeName);
-                      // تسجيل الخروج
+                      _goNextToLoginScreen(context); // تسجيل الخروج
                     }),
                   ],
                 ),
@@ -110,13 +138,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 
+  void _goNextToLoginScreen(BuildContext context) async {
+    await context.appConfigProvider.logout();
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      LogInScreen.routeName,
+      (route) => false,
+    );
+  }
+
   Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
     return ListTile(
       leading: Icon(icon, color: Colors.black),
-      title: Text(
-        title,
-        style: TextStyle(fontWeight: FontWeight.w500),
-      ),
+      title: Text(title, style: TextStyle(fontWeight: FontWeight.w500)),
       trailing: Icon(Icons.chevron_right),
       onTap: onTap,
     );
@@ -134,9 +168,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           IconButton(
             icon: const Icon(Icons.person, color: Colors.black),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => AdminProfile()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => AdminProfile()));
             },
           ),
           IconButton(
@@ -149,10 +183,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: IndexedStack(
-              index: selectedIndex,
-              children: admin,
-            ),
+            child: IndexedStack(index: selectedIndex, children: admin),
           ),
           Positioned(
             bottom: 0,
@@ -164,9 +195,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                 topLeft: Radius.circular(12),
               ),
               child: Theme(
-                data: Theme.of(context).copyWith(
-                  canvasColor: Colors.white,
-                ),
+                data: Theme.of(context).copyWith(canvasColor: Colors.white),
                 child: BottomNavigationBar(
                   showUnselectedLabels: true,
                   selectedItemColor: AppColors.babyBlue,
@@ -188,10 +217,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       icon: Icon(Icons.calendar_today_rounded, size: 20),
                       label: "Events",
                     ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.book_outlined, size: 20),
-                      label: "Documentation",
-                    ),
+                    // BottomNavigationBarItem(
+                    //   icon: Icon(Icons.book_outlined, size: 20),
+                    //   label: "Documentation",
+                    // ),
                   ],
                 ),
               ),

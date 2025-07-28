@@ -165,8 +165,8 @@ class _HomeTabState extends State<HomeTab> {
     if (state is StHomeTabNewsErrorState) {
       return HandleState.error(state.exception, context);
     }
-    if (cubit.events.isEmpty && cubit.news.isEmpty) {
-      return HandleState.emptyList(child: Text("Empty List"), list: []);
+    if (cubit.events.isEmpty || cubit.news.isEmpty) {
+      return HandleState.emptyList(child: Text("Home Data Empty List"), list: []);
     }
 
     return _buildBodySuccessWidget(cubit);

@@ -7,6 +7,7 @@ class AppUserEntity {
   final String? profilePhoto;
   final int? totalUnits;
   final String major;
+
   AppUserEntity({
     required this.id,
     required this.email,

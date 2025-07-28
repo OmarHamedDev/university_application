@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hti_university_app_1/features/domain/use_case/news_use_case/get_all_news_use_case.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../../../core/api/network/common/result.dart';
@@ -56,5 +57,9 @@ class AdminNewsCubit extends Cubit<AdminNewsState> {
     newsList.removeWhere((element) => element.id == id);
   }
 
-
+  String formatISOTime(String isoTime) {
+    final dateTime = DateTime.parse(isoTime).toLocal();
+    final formatter = DateFormat('hh:mm a dd/MM/yyyy'); // النتيجة: 12:00 AM 23/07/2025
+    return formatter.format(dateTime);
+  }
 }

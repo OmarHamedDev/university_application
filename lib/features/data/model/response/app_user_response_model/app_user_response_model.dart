@@ -45,7 +45,7 @@ class User {
   final String? major;
   @JsonKey(name: "phone_number")
   final String? phoneNumber;
-  @JsonKey(name: "profile_photo")
+  @JsonKey(name: "profile_photo_url")
   final String? profilePhoto;
   @JsonKey(name: "created_at")
   final String? createdAt;

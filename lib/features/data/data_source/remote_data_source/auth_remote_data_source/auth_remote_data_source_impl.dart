@@ -1,3 +1,4 @@
+import 'package:dio/src/multipart_file.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../domain/entities/app_user_entity.dart';
@@ -32,5 +33,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     _authMapper.mapAppUserModelToEntity(appUserModel),
     appUserModel.token
     );
+  }
+
+  @override
+  Future<AppUserEntity> getAppUser() async{
+   var appUserModel = await _apiManger.getProfile();
+    return _authMapper.mapUserToAppUserEntity(appUserModel);
+  }
+
+  @override
+  Future<String> logout()async {
+    await _apiManger.logout();
+    return "Success";
+  }
+
+  @override
+  Future<String> deletePhoto() async{
+    var response = await _apiManger.deletePhoto();
+    return response;
+  }
+
+  @override
+  Future<String> updatePhoto(List<MultipartFile> photo) async{
+    var response = await _apiManger.editProfile(photo);
+    return response;
   }
 }

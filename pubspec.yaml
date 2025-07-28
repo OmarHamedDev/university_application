@@ -51,11 +51,14 @@ dependencies:
   injectable:
   #    Flutter Secure Storage provides API to store data in secure storage. Keychain is used in iOS, KeyStore based solution is used in Android
   flutter_secure_storage:
-  #    A flutter plugin for adapting screen and font size.Guaranteed to look good on different models
   awesome_dialog:
   hive:
   hive_flutter:
   intl: ^0.20.2
+  image_picker:
+  file_picker: ^10.2.0
+  http_parser:
+  cached_network_image:
 dev_dependencies:
 
   injectable_generator:

@@ -122,6 +122,7 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var cubit = context.read<AdminNewsCubit>();
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
@@ -153,7 +154,7 @@ class NewsCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      time,
+                      cubit.formatISOTime(time),
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ],

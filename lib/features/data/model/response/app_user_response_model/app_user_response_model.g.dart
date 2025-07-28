@@ -34,7 +34,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       type: json['type'] as String?,
       major: json['major'] as String?,
       phoneNumber: json['phone_number'] as String?,
-      profilePhoto: json['profile_photo'] as String?,
+      profilePhoto: json['profile_photo_url'] as String?,
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
     );
@@ -47,7 +47,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'type': instance.type,
       'major': instance.major,
       'phone_number': instance.phoneNumber,
-      'profile_photo': instance.profilePhoto,
+      'profile_photo_url': instance.profilePhoto,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
     };

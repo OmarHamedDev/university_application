@@ -19,11 +19,9 @@ class AppConfigProvider extends ChangeNotifier {
   String? get token => _token;
 
   Future<void> initializeAppConfig() async {
-    print("initializeAppConfig");
     await _initializeToken();
-    print("token: $_token");
     await _initializeRole();
-    print("role: $_role");
+    print("role 124: $_role");
     await _getAppUserEntity();
     notifyListeners();
   }
@@ -58,7 +56,7 @@ class AppConfigProvider extends ChangeNotifier {
   }
 
   void _setRole(String? roleValue) {
-    if (roleValue == "graduate") {
+    if (roleValue == "student") {
       _role = Role.student;
     } else if (roleValue == "admin") {
       _role = Role.admin;
@@ -73,7 +71,8 @@ class AppConfigProvider extends ChangeNotifier {
   }
 
   String getInitialPageRouteName() {
-    if(token==null || token!.isEmpty || appUserEntity==null) return OnBoardingScreen.routeName;
+    if (token == null || token!.isEmpty || appUserEntity == null)
+      return OnBoardingScreen.routeName;
     if (role == Role.student) return StdHomeScreen.routeName;
     if (role == Role.admin) return AdminHomeScreen.routeName;
     return OnBoardingScreen.routeName;
