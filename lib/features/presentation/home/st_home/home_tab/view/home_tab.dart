@@ -5,6 +5,8 @@ import 'package:hti_university_app_1/dependency_inversion/di.dart';
 
 import '../../../../../domain/entities/event_entity.dart';
 import '../../../../../domain/entities/news_entity.dart';
+import '../../event/view/event_student.dart';
+import '../../news/view/news_view.dart';
 import '../view_model/st_home_tab_cubit.dart';
 
 class HomeTab extends StatefulWidget {
@@ -37,7 +39,7 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Widget _buildSectionHeader(String title, String actionText) {
+  Widget _buildSectionHeader(String title, String actionText, VoidCallback onTap) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -45,7 +47,7 @@ class _HomeTabState extends State<HomeTab> {
           title,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        Text(actionText, style: const TextStyle(color: Colors.blue)),
+        InkWell(onTap: onTap, child:  Text(actionText, style: const TextStyle(color: Colors.blue))),
       ],
     );
   }
@@ -156,20 +158,23 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   Widget _handleBlocBuilder(StHomeTabCubit cubit, StHomeTabState state) {
-    if (state is StHomeTbEventsLoading || state is StHomeTabNewsLoading) {
-      return HandleState.loading();
-    }
-    if (state is StHomeTabEventsErrorState) {
-      return HandleState.error(state.exception, context);
-    }
-    if (state is StHomeTabNewsErrorState) {
-      return HandleState.error(state.exception, context);
-    }
-    if (cubit.events.isEmpty || cubit.news.isEmpty) {
-      return HandleState.emptyList(child: Text("Home Data Empty List"), list: []);
-    }
+      if (state is StHomeTabEventsLoadingState || state is StHomeTabNewsLoadingState) {
+        return HandleState.loading();
+      }
 
-    return _buildBodySuccessWidget(cubit);
+      if (state is StHomeTabEventsErrorState || state is StHomeTabNewsErrorState) {
+        final exception = (state as dynamic).exception;
+        return HandleState.error(exception, context);
+      }
+
+      if (cubit.events.isEmpty || cubit.news.isEmpty) {
+        return HandleState.emptyList(
+          child: const Text("Home Data Empty List"),
+          list: [],
+        );
+      }
+
+      return _buildBodySuccessWidget(cubit);
   }
 
   Widget _buildBodySuccessWidget(StHomeTabCubit cubit) {
@@ -212,9 +217,18 @@ class _HomeTabState extends State<HomeTab> {
             ],
           ),
           const SizedBox(height: 20),
+          CircleAvatar(
+            radius: 180,
+            backgroundColor: Colors.transparent,
+            backgroundImage: AssetImage(
+              'assets/images/logo_9.png',
+            ),
+          ),
 
           // Events Section
-          _buildSectionHeader('Events', ''),
+          _buildSectionHeader('Events', 'See all',() {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => EventStudent(),));
+          },),
           const SizedBox(height: 10),
           SizedBox(
             height: 180,
@@ -227,9 +241,10 @@ class _HomeTabState extends State<HomeTab> {
             ),
           ),
           const SizedBox(height: 20),
+          _buildSectionHeader('News:', 'See all',() {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => NewsView(),));
 
-          // News Section
-          _buildSectionHeader('News:', ''),
+          }),
           const SizedBox(height: 10),
           ListView.separated(
             shrinkWrap: true,

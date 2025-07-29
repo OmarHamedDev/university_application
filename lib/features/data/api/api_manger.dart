@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:hti_university_app_1/features/data/model/response/chat_response_model/answer_queston_response_model/answer_question_response_model.dart';
 import 'package:hti_university_app_1/features/data/model/response/event_response_model/event_response_model.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/error_logger.dart' show ParseErrorLogger;
@@ -12,8 +13,11 @@ import '../model/request/request_type_request/RequestTypeRequestModel.dart';
 import '../model/response/admin_panding_response_model/admin_panding_response_model.dart';
 import '../model/response/admin_student_request_reseponse_model/admin_student_request_response_model.dart';
 import '../model/response/app_user_response_model/app_user_response_model.dart';
+import '../model/response/chat_response_model/get_all_questions_response_model/get_all_questions_response_model.dart';
+import '../model/response/get_all_student_request_response_model/get_all_student_request_response_model.dart';
 import '../model/response/news_response_model/news_response_model.dart';
 import '../model/response/request_type_response_model/request_type_response_model.dart';
+import '../model/response/student_request_response_model/StudentRequestResponseModel.dart';
 
 part 'api_manger.g.dart';
 
@@ -108,5 +112,29 @@ abstract class ApiManger {
   Future<String> editProfile(@Part(name: "photo") List<MultipartFile> files);
   @DELETE(EndPoints.profileEdit)
   Future<String> deleteProfile();
+
+
+  @POST(EndPoints.studentRequest)
+  @MultiPart()
+  Future<String> createStudentRequest(
+      @Part(name: "receipt_image") List<MultipartFile> files,
+      @Part(name: "request_id") int requestId,
+      @Part(name: "count") int count,
+      @Part(name: "student_name_ar") String studentNameAr,
+      @Part(name: "student_name_en") String studentNameEn,
+      @Part(name: "department") String department,
+      @Part(name: "student_id") int studentId,
+      );
+
+  @GET(EndPoints.studentRequest)
+  Future<Student_request_response_model>getAllRequestsStudent();
+
+  @GET(EndPoints.request)
+  Future<GetAllStudentRequestResponseModel> getAllRequestsTypeStudent();
+
+  @GET(EndPoints.questions)
+  Future<GetAllQuestionsResponseModel> getAllQuestions();
+  @GET("${EndPoints.answer}/{id}")
+  Future<AnswerQuestionResponseModel> getAnswer(@Path("id") int id);
 
 }

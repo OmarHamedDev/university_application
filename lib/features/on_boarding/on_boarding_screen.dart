@@ -13,9 +13,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final PageController _pageController = PageController();
 
   final List<String> images = [
-    'assets/images/Image (1).png',
-    'assets/images/rafiki.png',
-    'assets/images/image 3.png',
+    'assets/images/1.jpg',
+    'assets/images/2.png',
+    'assets/images/3.png',
   ];
 
   final List<String> titles = [
@@ -70,8 +70,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       Image.asset(
                         images[index],
                         height: height * 0.5,
-                        width: width * 0.5,
-                        fit: BoxFit.contain,
+                        width: double.infinity,
+                        fit: BoxFit.fill,
                       ),
                       SizedBox(height: height * 0.04),
                       Text(

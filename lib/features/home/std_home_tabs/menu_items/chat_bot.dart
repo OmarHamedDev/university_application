@@ -1,106 +1,155 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'
+    show BlocConsumer, BlocProvider, ReadContext;
 
-class Chatbot extends StatelessWidget {
+import '../../../../core/utils/functions/handle_state/handle_state.dart';
+import '../../../../dependency_inversion/di.dart';
+import '../../../presentation/home/st_home/menua/chat/view/chat_cubit.dart';
+
+class Chatbot extends StatefulWidget {
   const Chatbot({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // رسائل وهمية
-    final List<Map<String, dynamic>> messages = [
-      {"text": "Hello chat, how are you today?", "isUser": true},
-      {"text": "Hello, I'm fine, how can I help you?", "isUser": false},
-      {"text": "What is the best programming language?", "isUser": true},
-      {
-        "text":
-        "There are many programming languages in the market that are used in designing and building websites, various applications and other tasks. All these languages are popular in their place and in the way they are used, and many programmers learn and use them.",
-        "isUser": false
-      },
-      {"text": "So explain to me more", "isUser": true},
-    ];
+  State<Chatbot> createState() => _ChatbotState();
+}
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text("Chatbot", style: TextStyle(color: Colors.blue)),
-        centerTitle: true,
+class _ChatbotState extends State<Chatbot> {
+  final Set<int> answeredIds = {};
+  final Set<int> loadingIds = {};
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt.get<ChatCubit>()..getAllQuestions(),
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0,
-        leading: const BackButton(color: Colors.black),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final msg = messages[index];
-                return Align(
-                  alignment: msg['isUser']
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.75,
-                    ),
-                    decoration: BoxDecoration(
-                      color: msg['isUser']
-                          ? Colors.blue
-                          : Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: Text(
-                      msg['text'],
-                      style: TextStyle(
-                        color: msg['isUser'] ? Colors.white : Colors.black87,
-                        fontSize: 14.5,
-                      ),
-                    ),
+        appBar: AppBar(
+          title: const Text("Chatbot", style: TextStyle(color: Colors.blue)),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: const BackButton(color: Colors.black),
+        ),
+        body: BlocConsumer<ChatCubit, ChatState>(
+          listener: (context, state) {
+            if (state is AnswerQuestionSuccessState) {
+              setState(() {
+                loadingIds.removeWhere(
+                  (id) => context.read<ChatCubit>().chats.any(
+                    (chat) => chat.id == id && chat.answer?.isNotEmpty == true,
                   ),
                 );
-              },
-            ),
-          ),
+                answeredIds.addAll(
+                  context
+                      .read<ChatCubit>()
+                      .chats
+                      .where((chat) => chat.answer?.isNotEmpty ?? false)
+                      .map((chat) => chat.id!)
+                      .toList(),
+                );
+              });
+            } else if (state is AnswerQuestionErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Error: ${state.exception.toString()}')),
+              );
+              setState(() {
+                loadingIds.clear();
+              });
+            }
+          },
+          builder: (context, state) {
+            if (state is GetAllQuestionsLoadingState) {
+              return HandleState.loading();
+            } else if (state is GetAllQuestionsErrorState) {
+              return HandleState.error(state.exception, context);
+            } else {
+              final chats = context.read<ChatCubit>().chats;
 
-          // Input area
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Colors.grey.shade300)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration:
-                    InputDecoration(
-                      hintText: 'Write your message',
-                      border: InputBorder.none,
-                    ),
-                  ),
+              return HandleState.emptyList(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: chats.length,
+                  itemBuilder: (context, index) {
+                    final chat = chats[index];
+                    final isAnswered = answeredIds.contains(chat.id);
+                    final isLoading = loadingIds.contains(chat.id);
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 16,
+                              ),
+                            ),
+                            onPressed: () async {
+                              if (chat.id != null &&
+                                  !isAnswered &&
+                                  !isLoading) {
+                                setState(() {
+                                  loadingIds.add(chat.id!);
+                                });
+                                await context.read<ChatCubit>().answerQuestions(
+                                  chat.id!.toString(),
+                                );
+                              }
+                            },
+                            child:
+                                isLoading
+                                    ? const SizedBox(
+                                      height: 16,
+                                      width: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                    : Text(
+                                      chat.question ?? '',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                          ),
+                        ),
+                        if (isAnswered && (chat.answer?.isNotEmpty ?? false))
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 8, bottom: 16),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: Text(
+                                chat.answer ?? '',
+                                style: const TextStyle(fontSize: 14.5),
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.mic_none, color: Colors.grey),
-                  onPressed: () {},
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+                list: chats,
+              );
+            }
+          },
+        ),
       ),
     );
   }

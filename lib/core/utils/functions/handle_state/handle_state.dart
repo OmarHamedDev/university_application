@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hti_university_app_1/core/extension/extension.dart';
+import '../../../../features/presentation/login/view/log_in.dart';
 import '../../../api/network/error/error_handler.dart';
 
 class HandleState {
@@ -38,11 +40,12 @@ class HandleState {
                 ),
                // verticalSpace(30),
                 ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the login screen
+                  onPressed: () async {
+
+                    await context.appConfigProvider.logout();
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      "/login",
+                      LogInScreen.routeName,
                       (route) => false,
 
                     );

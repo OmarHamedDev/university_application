@@ -75,35 +75,35 @@ class _LogInScreenState extends State<LogInScreen> {
                       mycontroller: loginViewModel.passwordController,
                       obscureText: false,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0, right: 14),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                ForgetPasswordOne.routeName,
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Text(
-                                  textAlign: TextAlign.end,
-                                  "Forgot password ?",
-                                  style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.end,
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(top: 4.0, right: 14),
+                    //       child: InkWell(
+                    //         onTap: () {
+                    //           Navigator.pushNamed(
+                    //             context,
+                    //             ForgetPasswordOne.routeName,
+                    //           );
+                    //         },
+                    //         child: Column(
+                    //           children: [
+                    //             Text(
+                    //               textAlign: TextAlign.end,
+                    //               "Forgot password ?",
+                    //               style: TextStyle(
+                    //                 color: AppColors.primary,
+                    //                 fontSize: 15,
+                    //                 fontWeight: FontWeight.w500,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     SizedBox(height: 50),
                     NextButton(
                       onTap: () {

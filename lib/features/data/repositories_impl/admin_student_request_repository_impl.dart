@@ -1,6 +1,8 @@
+import 'package:dio/src/multipart_file.dart';
 import 'package:hti_university_app_1/core/api/network/common/result.dart';
 import 'package:hti_university_app_1/features/domain/entities/admin_student_request_entity.dart';
 import 'package:hti_university_app_1/features/domain/entities/panding_request_enitiy.dart';
+import 'package:hti_university_app_1/features/domain/entities/request_type_entity.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/api/network/common/execute_method.dart';
@@ -64,8 +66,9 @@ class AdminStudentRequestRepositoryImpl
   }
 
   @override
-  Future<Result<PandingRequestEnitiy>>
-  getAllPendingRequestsAdminById({required int id}) async {
+  Future<Result<PandingRequestEnitiy>> getAllPendingRequestsAdminById({
+    required int id,
+  }) async {
     return executeMethod<PandingRequestEnitiy>(
       callMethod: () async {
         return await adminStudentRequestRemoteDataSource
@@ -85,6 +88,51 @@ class AdminStudentRequestRepositoryImpl
           id: id,
           reason: reason,
         );
+      },
+    );
+  }
+
+  @override
+  Future<Result<String>> addRequestTypeStudent({
+    required List<MultipartFile> files,
+    required int requestId,
+    required int count,
+    required String studentNameAr,
+    required String studentNameEn,
+    required String department,
+    required int studentId,
+  }) async {
+    return executeMethod<String>(
+      callMethod: () async {
+        return await adminStudentRequestRemoteDataSource.addRequestTypeStudent(
+          files: files,
+          requestId: requestId,
+          count: count,
+          studentNameAr: studentNameAr,
+          studentNameEn: studentNameEn,
+          department: department,
+          studentId: studentId,
+        );
+      },
+    );
+  }
+
+  @override
+  Future<Result<List<AdminStudentRequestEntity>>> getAllRequestsTypeAdmin() {
+    return executeMethod<List<AdminStudentRequestEntity>>(
+      callMethod: () async {
+        return await adminStudentRequestRemoteDataSource
+            .getAllRequestsTypeAdmin();
+      },
+    );
+  }
+
+  @override
+  Future<Result<List<RequestTypeEntity>>> getAllRequestsTypeStudent() {
+    return executeMethod<List<RequestTypeEntity>>(
+      callMethod: () async {
+        return await adminStudentRequestRemoteDataSource
+            .getAllRequestsTypeStudent();
       },
     );
   }

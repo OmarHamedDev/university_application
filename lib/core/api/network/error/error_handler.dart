@@ -41,8 +41,7 @@ class ErrorHandler {
   static ErrorModel _formResponse(Response response) {
     final statusCode = response.statusCode;
     final responseData = response.data;
-    final message =
-        responseData is Map<String, dynamic> ? responseData["message"] : null;
+    final message = responseData is Map<String, dynamic> ? responseData["message"] : null;
 
     if (statusCode == 400) {
       return ErrorModel(

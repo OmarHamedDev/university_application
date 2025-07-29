@@ -21,7 +21,7 @@ class StHomeTabCubit extends Cubit<StHomeTabState> {
   List<EventEntity> _events = [];
   List<EventEntity> get events => _events;
   Future<void> getAllEvents() async {
-    emit(StHomeTabEventsLoadedState());
+    emit(StHomeTabEventsLoadingState());
     var result = await _getAllEventUseCase.invoke();
     switch (result) {
       case Success<List<EventEntity>>():
@@ -38,7 +38,7 @@ class StHomeTabCubit extends Cubit<StHomeTabState> {
   List<NewsEntity> _news = [];
   List<NewsEntity> get news => _news;
   Future<void> getAllNews() async {
-    emit(StHomeTabNewsLoading());
+    emit(StHomeTabNewsLoadingState());
     var result = await _getAllNewsUseCase.invoke();
     switch (result) {
       case Success<List<NewsEntity>>():

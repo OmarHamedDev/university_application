@@ -1,7 +1,9 @@
+import 'package:dio/src/multipart_file.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../domain/entities/admin_student_request_entity.dart';
 import '../../../../domain/entities/panding_request_enitiy.dart';
+import '../../../../domain/entities/request_type_entity.dart';
 import '../../../api/api_manger.dart';
 import '../../../mapper/admin_studetn_request_mapper.dart';
 import 'admin_student_request_remote_data_source.dart';
@@ -72,5 +74,44 @@ class AdminStudentRequestRemoteDataSourceImpl
   }) async {
     await apiManger.rejectRequest(id, {"reason": reason});
     return "Success";
+  }
+
+  @override
+  Future<String> addRequestTypeStudent({
+    required List<MultipartFile> files,
+    required int requestId,
+    required int count,
+    required String studentNameAr,
+    required String studentNameEn,
+    required String department,
+    required int studentId,
+  }) async {
+    return apiManger.createStudentRequest(
+      files,
+      requestId,
+      count,
+      studentNameAr,
+      studentNameEn,
+      department,
+      studentId,
+    );
+  }
+
+  @override
+  Future<List<AdminStudentRequestEntity>> getAllRequestsTypeAdmin() async {
+    var adminStudentRequestResponseModel =
+        await apiManger.getAllRequestsStudent();
+    return adminStudentRequestMapper.mapStudentRequestResponseModelToEntity(
+      adminStudentRequestResponseModel,
+    );
+  }
+
+  @override
+  Future<List<RequestTypeEntity>> getAllRequestsTypeStudent() async {
+    var adminStudentRequestResponseModel =
+        await apiManger.getAllRequestsTypeStudent();
+    return adminStudentRequestMapper.mapRequestTypeResponseModelToEntity(
+      adminStudentRequestResponseModel,
+    );
   }
 }

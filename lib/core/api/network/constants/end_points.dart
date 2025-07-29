@@ -14,5 +14,9 @@ class EndPoints {
   static const String resetPassword = "password/verify-code";
   static const String uploadExcel = "admin/import-users";
   static const String createStudentUser = "admin/create-user";
+  static const String studentRequest = "student-requests";
   static const String profileEdit="profile/photo";
+  static const String request = "requests"; //اس
+  static const String questions = "chatbot/questions";
+  static const String answer = "chatbot/answer";
 }

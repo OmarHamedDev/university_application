@@ -33,6 +33,10 @@ import '../features/data/data_source/remote_data_source/auth_remote_data_source/
     as _i299;
 import '../features/data/data_source/remote_data_source/auth_remote_data_source/auth_remote_data_source_impl.dart'
     as _i600;
+import '../features/data/data_source/remote_data_source/chat_remote_data_source/chat_remote_data_source.dart'
+    as _i638;
+import '../features/data/data_source/remote_data_source/chat_remote_data_source/chat_remote_data_source_impl.dart'
+    as _i938;
 import '../features/data/data_source/remote_data_source/create_remote_data_source/create_remote_data_source.dart'
     as _i940;
 import '../features/data/data_source/remote_data_source/create_remote_data_source/create_remote_data_source_impl.dart'
@@ -53,6 +57,7 @@ import '../features/data/mapper/request_type_mapper.dart' as _i703;
 import '../features/data/repositories_impl/admin_student_request_repository_impl.dart'
     as _i1064;
 import '../features/data/repositories_impl/auth_repository_impl.dart' as _i419;
+import '../features/data/repositories_impl/chat_repository_impl.dart' as _i1061;
 import '../features/data/repositories_impl/create_user_repository_impl.dart'
     as _i834;
 import '../features/data/repositories_impl/event_repository_impl.dart' as _i18;
@@ -62,12 +67,15 @@ import '../features/data/repositories_impl/request_type_repository_impl.dart'
 import '../features/domain/repositories/admin_student_request_repository.dart'
     as _i832;
 import '../features/domain/repositories/auth_repository.dart' as _i858;
+import '../features/domain/repositories/chat_repository.dart' as _i909;
 import '../features/domain/repositories/create_repository.dart' as _i804;
 import '../features/domain/repositories/event_repository.dart' as _i329;
 import '../features/domain/repositories/new_repository.dart' as _i531;
 import '../features/domain/repositories/request_type_repository.dart' as _i80;
 import '../features/domain/use_case/admin_student_request_use_case/accept_request_use_case.dart'
     as _i645;
+import '../features/domain/use_case/admin_student_request_use_case/create_student_request_use_case.dart'
+    as _i292;
 import '../features/domain/use_case/admin_student_request_use_case/get_all_accepted_requests_admin_use_case.dart'
     as _i1023;
 import '../features/domain/use_case/admin_student_request_use_case/get_all_panding_requests_admin_use_case.dart'
@@ -76,6 +84,10 @@ import '../features/domain/use_case/admin_student_request_use_case/get_all_pendi
     as _i279;
 import '../features/domain/use_case/admin_student_request_use_case/get_all_regicted_requests_admin_use_case.dart'
     as _i968;
+import '../features/domain/use_case/admin_student_request_use_case/get_all_request_type_student_use_case.dart'
+    as _i715;
+import '../features/domain/use_case/admin_student_request_use_case/get_all_requests_type_admin_use_case.dart'
+    as _i485;
 import '../features/domain/use_case/admin_student_request_use_case/regicted_request_use_case.dart'
     as _i95;
 import '../features/domain/use_case/auth_use_case/delete_profile_use_case.dart'
@@ -87,6 +99,10 @@ import '../features/domain/use_case/auth_use_case/logout_use_case.dart'
     as _i207;
 import '../features/domain/use_case/auth_use_case/update_profile_use_case.dart'
     as _i284;
+import '../features/domain/use_case/chat_use_case/answer_questions_use_case.dart'
+    as _i723;
+import '../features/domain/use_case/chat_use_case/get_all_questions_use_case.dart'
+    as _i392;
 import '../features/domain/use_case/create_use_case/create_single_use_case.dart'
     as _i721;
 import '../features/domain/use_case/create_use_case/upload_excal_use_case.dart'
@@ -141,8 +157,22 @@ import '../features/presentation/home/ad_home/requests/view_model/regiect_reques
     as _i73;
 import '../features/presentation/home/ad_home/requests/view_model/reject_reason/reject_reason_cubit.dart'
     as _i425;
+import '../features/presentation/home/st_home/event/view_model/event_cubit.dart'
+    as _i612;
 import '../features/presentation/home/st_home/home_tab/view_model/st_home_tab_cubit.dart'
     as _i947;
+import '../features/presentation/home/st_home/menua/chat/view/chat_cubit.dart'
+    as _i977;
+import '../features/presentation/home/st_home/menua/request_student/view_model/request_studnet_cubit.dart'
+    as _i626;
+import '../features/presentation/home/st_home/news/view_model/news_cubit.dart'
+    as _i824;
+import '../features/presentation/home/st_home/profile/view_model/student_profile_cubit.dart'
+    as _i973;
+import '../features/presentation/home/st_home/st_request/view_model/confirm_st_request/confirm_st_request_cubit.dart'
+    as _i313;
+import '../features/presentation/home/st_home/st_request/view_model/st_request/st_request_cubit.dart'
+    as _i416;
 import '../features/presentation/login/view_model/login_cubit.dart' as _i240;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -174,6 +204,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i179.CreateRemoteDataSourceImpl(gh<_i284.ApiManger>()));
     gh.factory<_i804.CreateRepository>(
         () => _i834.CreateRepositoryImpl(gh<_i940.CreateRemoteDataSource>()));
+    gh.factory<_i638.ChatRemoteDataSource>(
+        () => _i938.ChatRemoteDataSourceImpl(gh<_i284.ApiManger>()));
     gh.factory<_i735.AdminRequestTypeRemoteDataSource>(
         () => _i1059.AdminRequestTypeRemoteDataSourceImpl(
               gh<_i284.ApiManger>(),
@@ -208,6 +240,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i284.ApiManger>(),
           gh<_i242.NewsMapper>(),
         ));
+    gh.factory<_i909.ChatRepository>(() => _i1061.ChatRepositoryImpl(
+        chatRemoteDataSource: gh<_i638.ChatRemoteDataSource>()));
     gh.factory<_i858.AuthRepository>(() => _i419.AuthRepositoryImpl(
           gh<_i299.AuthRemoteDataSource>(),
           gh<_i948.AuthOfflineDataSource>(),
@@ -226,6 +260,10 @@ extension GetItInjectableX on _i174.GetIt {
                 gh<_i1058.AdminStudentRequestRemoteDataSource>()));
     gh.factory<_i329.EventRepository>(
         () => _i18.EventRepositoryImpl(gh<_i690.EventRemoteDataSource>()));
+    gh.factory<_i723.AnswerQuestionsUseCase>(() => _i723.AnswerQuestionsUseCase(
+        chatRepository: gh<_i909.ChatRepository>()));
+    gh.factory<_i392.GetAllQuestionsUseCase>(() => _i392.GetAllQuestionsUseCase(
+        chatRepository: gh<_i909.ChatRepository>()));
     gh.factory<_i531.NewRepository>(() => _i809.NewsRepositoryImpl(
         newsRemoteDataSource: gh<_i414.NewsRemoteDataSource>()));
     gh.factory<_i80.RequestTypeRepository>(() =>
@@ -245,6 +283,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1023.GetAllAcceptedRequestsAdminUseCase>(() =>
         _i1023.GetAllAcceptedRequestsAdminUseCase(
             gh<_i832.AdminStudentRequestRepository>()));
+    gh.factory<_i292.CreateStudentRequestUseCase>(() =>
+        _i292.CreateStudentRequestUseCase(
+            gh<_i832.AdminStudentRequestRepository>()));
+    gh.factory<_i485.GetAllRequestsTypeAdminUseCase>(() =>
+        _i485.GetAllRequestsTypeAdminUseCase(
+            gh<_i832.AdminStudentRequestRepository>()));
+    gh.factory<_i626.RequestStudnetCubit>(() =>
+        _i626.RequestStudnetCubit(gh<_i485.GetAllRequestsTypeAdminUseCase>()));
     gh.factory<_i240.LoginCubit>(
         () => _i240.LoginCubit(gh<_i434.LoginUseCase>()));
     gh.factory<_i454.GetProfileUseCase>(() =>
@@ -252,6 +298,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i207.LogoutUseCase>(
         () => _i207.LogoutUseCase(authRepository: gh<_i858.AuthRepository>()));
     gh.factory<_i484.AdminProfileCubit>(() => _i484.AdminProfileCubit(
+          gh<_i454.GetProfileUseCase>(),
+          gh<_i553.DeleteProfileUseCase>(),
+          gh<_i284.UpdateProfileUseCase>(),
+        ));
+    gh.factory<_i973.StudentProfileCubit>(() => _i973.StudentProfileCubit(
           gh<_i454.GetProfileUseCase>(),
           gh<_i553.DeleteProfileUseCase>(),
           gh<_i284.UpdateProfileUseCase>(),
@@ -266,6 +317,8 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1023.GetAllAcceptedRequestsAdminUseCase>()));
     gh.factory<_i990.CreateEventCubit>(
         () => _i990.CreateEventCubit(gh<_i869.CreateEventUseCase>()));
+    gh.factory<_i313.ConfirmStRequestCubit>(() =>
+        _i313.ConfirmStRequestCubit(gh<_i292.CreateStudentRequestUseCase>()));
     gh.factory<_i634.UpdateRequestTypeCubit>(() =>
         _i634.UpdateRequestTypeCubit(gh<_i284.UpdateRequestTypeUseCase>()));
     gh.factory<_i691.CreateNewsUseCase>(() =>
@@ -274,6 +327,12 @@ extension GetItInjectableX on _i174.GetIt {
         _i837.DeleteNewsUseCase(newsRepository: gh<_i531.NewRepository>()));
     gh.factory<_i872.GetAllNewsUseCase>(() =>
         _i872.GetAllNewsUseCase(newsRepository: gh<_i531.NewRepository>()));
+    gh.factory<_i612.EventCubit>(
+        () => _i612.EventCubit(gh<_i1057.GetAllEventUseCase>()));
+    gh.factory<_i977.ChatCubit>(() => _i977.ChatCubit(
+          gh<_i392.GetAllQuestionsUseCase>(),
+          gh<_i723.AnswerQuestionsUseCase>(),
+        ));
     gh.factory<_i552.AddRequestTypeCubit>(
         () => _i552.AddRequestTypeCubit(gh<_i363.AddRequestTypeUseCase>()));
     gh.factory<_i645.AcceptRequestUseCase>(() => _i645.AcceptRequestUseCase(
@@ -294,16 +353,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i95.RegictedRequestUseCase>(() => _i95.RegictedRequestUseCase(
         adminStudentRequestRepository:
             gh<_i832.AdminStudentRequestRepository>()));
+    gh.factory<_i715.GetAllRequestTypeStudentUseCase>(() =>
+        _i715.GetAllRequestTypeStudentUseCase(
+            adminStudentRequestRepository:
+                gh<_i832.AdminStudentRequestRepository>()));
     gh.factory<_i43.MangentRquestTypeCubit>(() => _i43.MangentRquestTypeCubit(
           gh<_i986.GetAllRequestTypeUseCase>(),
           gh<_i577.DeleteRequestTypeUseCase>(),
         ));
+    gh.factory<_i416.StRequestCubit>(() =>
+        _i416.StRequestCubit(gh<_i715.GetAllRequestTypeStudentUseCase>()));
     gh.factory<_i318.RegiectedRequestCubit>(() => _i318.RegiectedRequestCubit(
         gh<_i968.GetAllRejectedRequestsAdminUseCase>()));
     gh.factory<_i502.AdminEventCubit>(() => _i502.AdminEventCubit(
           gh<_i1057.GetAllEventUseCase>(),
           gh<_i724.DeleteEventUseCase>(),
         ));
+    gh.factory<_i824.NewsCubit>(
+        () => _i824.NewsCubit(gh<_i872.GetAllNewsUseCase>()));
     gh.factory<_i175.AdminNewsCubit>(() => _i175.AdminNewsCubit(
           gh<_i872.GetAllNewsUseCase>(),
           gh<_i837.DeleteNewsUseCase>(),

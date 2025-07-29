@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import '../../presentation/login/view/log_in.dart';
-import 'menu_items/chat_bot.dart';
-import 'menu_items/documents.dart';
-import 'menu_items/my_requests.dart';
-import 'menu_items/profile.dart';
-import 'notification_tab.dart';
+import 'package:hti_university_app_1/core/extension/extension.dart';
+import 'package:hti_university_app_1/features/presentation/home/st_home/news/view/news_view.dart';
+import '../../../login/view/log_in.dart';
+import '../../../../home/std_home_tabs/menu_items/chat_bot.dart';
+import '../../../../home/std_home_tabs/menu_items/documents.dart';
+import '../../../../home/std_home_tabs/menu_items/profile.dart';
+import '../../../../home/std_home_tabs/notification_tab.dart';
+import '../event/view/event_student.dart';
+import '../menua/request_student/view/my_requests.dart';
+import '../profile/view/student_profile.dart';
 
 class MenuTab extends StatelessWidget {
   const MenuTab({super.key});
@@ -64,22 +68,25 @@ class MenuTab extends StatelessWidget {
               height: 20,
             ),
             menuItem('Profile page', Icons.person, () {
-              Navigator.pushNamed(context, Profile.routeName);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => StudentProfile(),));
             }),
             menuItem('My Requests', Icons.edit, () {
-              Navigator.pushNamed(context, MyRequests.routeName);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyRequestsStudent(),));
             }),
-            menuItem('Documents library', Icons.folder_copy_outlined, () {
-              Navigator.pushNamed(context, Documents.routeName);
+            menuItem('Events', Icons.event, () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EventStudent(),));
             }),
-            menuItem('Notifications', Icons.notifications_none, () {
-              Navigator.pushNamed(context, NotificationTab.routeName);
+            menuItem('New ', Icons.newspaper, () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NewsView(),));
             }),
+            // menuItem('Notifications', Icons.notifications_none, () {
+            //   Navigator.pushNamed(context, NotificationTab.routeName);
+            // }),
             menuItem('My-Chatbot', Icons.message_outlined, () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => Chatbot(),));
             }),
-            menuItem('Log out', Icons.logout, () {
-              Navigator.pushNamed(context, LogInScreen.routeName);
+            menuItem('Log out', Icons.logout, ()  {
+              _goNextToLoginScreen(context);
             }),
           ],
         ),
@@ -87,4 +94,14 @@ class MenuTab extends StatelessWidget {
       backgroundColor: Colors.white,
     );
   }
+
+  void _goNextToLoginScreen(BuildContext context) async {
+    await context.appConfigProvider.logout();
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      LogInScreen.routeName,
+          (route) => false,
+    );
+  }
+
 }

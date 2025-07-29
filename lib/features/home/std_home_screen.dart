@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hti_university_app_1/features/presentation/home/st_home/home_tab/view/home_tab.dart';
-import 'package:hti_university_app_1/features/home/std_home_tabs/menu_tab.dart';
+import 'package:hti_university_app_1/features/presentation/home/st_home/student_menu_tab/menu_tab.dart';
 import 'package:hti_university_app_1/features/home/std_home_tabs/notification_tab.dart';
-import 'package:hti_university_app_1/features/home/std_home_tabs/requests_tab.dart';
+import 'package:hti_university_app_1/features/presentation/home/st_home/st_request/view/requests_tab.dart';
 
 import '../../core/utils/constants/App_colors.dart';
 
@@ -20,8 +20,8 @@ class _StdHomeScreenState extends State<StdHomeScreen> {
   final List<Widget> tabs = [
     HomeTab(),
     RequestsTab(),
-    NotificationTab(),
-    MenuTab(),
+   // NotificationTab(),
+   MenuTab(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -61,8 +61,8 @@ class _StdHomeScreenState extends State<StdHomeScreen> {
                         icon: Icon(Icons.home_outlined, size: 20), label: "Home"),
                     BottomNavigationBarItem(
                         icon: Icon(Icons.add_box_outlined, size: 20), label: "Requests"),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications_outlined, size: 20), label: "Notification"),
+                    // BottomNavigationBarItem(
+                    //     icon: Icon(Icons.notifications_outlined, size: 20), label: "Notification"),
                     BottomNavigationBarItem(
                         icon: Icon(Icons.menu, size: 20), label: "Menu"),
                   ],
