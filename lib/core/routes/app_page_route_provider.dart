@@ -56,7 +56,7 @@ class AppConfigProvider extends ChangeNotifier {
   }
 
   void _setRole(String? roleValue) {
-    if (roleValue == "student") {
+    if (roleValue == "student"  || roleValue == "graduate") {
       _role = Role.student;
     } else if (roleValue == "admin") {
       _role = Role.admin;

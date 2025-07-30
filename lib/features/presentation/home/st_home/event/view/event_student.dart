@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hti_university_app_1/dependency_inversion/di.dart';
 import 'package:hti_university_app_1/features/domain/entities/event_entity.dart';
+import 'package:hti_university_app_1/features/presentation/home/st_home/event/view/student_event_details.dart';
 import 'package:hti_university_app_1/features/presentation/home/st_home/event/view_model/event_cubit.dart';
 import '../../../../../../../core/utils/constants/App_colors.dart';
 import '../../../../../../core/utils/functions/handle_state/handle_state.dart';
@@ -85,75 +86,63 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var eventCubit = context.read<EventCubit>();
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          CachedNetworkImageWidget(
-            imageUrl: event.image,
-            height: 200,
-            width: double.infinity,
-            // fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StudentEventDetails(),
           ),
-          // Positioned(
-          //   top: 10,
-          //   right: 10,
-          //   child: CircleAvatar(
-          //     radius: 12,
-          //     backgroundColor: Colors.red,
-          //     child: InkWell(
-          //         onTap: () {
-          //           showAwesomeDialog(
-          //             context,
-          //             title: "Delete Event",
-          //             desc: "Do you want to delete this event?",
-          //             onOk: () {
-          //               eventCubit.deleteEvent(id: event.id ?? 0);
-          //             },
-          //             onCancel: () {},
-          //             dialogType: DialogType.question,
-          //           );
-          //         },
-          //         child: const Icon(Icons.close, size: 16, color: Colors.white)),
-          //   ),
-          // ),
-          Positioned(
-            top: 20,
-            left: 16,
-            child: Text(
-              event.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: Colors.white,
+        );
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            CachedNetworkImageWidget(
+              imageUrl: event.image,
+              height: 200,
+              width: double.infinity,
+              // fit: BoxFit.cover,
+            ),
+            Positioned(
+              top: 20,
+              left: 16,
+              child: Text(
+                event.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 45,
-            left: 16,
-            child: Text(
-              event.content,
-              style: const TextStyle(color: Colors.white),
+            Positioned(
+              top: 45,
+              left: 16,
+              child: Text(
+                event.content,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-          ),
-          Positioned(
-            bottom: 10,
-            left: 16,
-            child: Row(
-              children: [
-                Image.asset('assets/images/hti_logo.png', height: 30),
-                const SizedBox(width: 10),
-                Text(
-                  eventCubit.formatISOTime(event.createdAt),
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
+            Positioned(
+              bottom: 10,
+              left: 16,
+              child: Row(
+                children: [
+                  Image.asset('assets/images/hti_logo.png', height: 30),
+                  const SizedBox(width: 10),
+                  Text(
+                    eventCubit.formatISOTime(event.createdAt),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
