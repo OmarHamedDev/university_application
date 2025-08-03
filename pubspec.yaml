@@ -59,6 +59,7 @@ dependencies:
   file_picker: ^10.2.0
   http_parser:
   cached_network_image:
+  dartz: ^0.10.1
 dev_dependencies:
 
   injectable_generator:

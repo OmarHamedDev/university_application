@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hti_university_app_1/core/utils/functions/handle_state/handle_state.dart';
 import 'package:hti_university_app_1/dependency_inversion/di.dart';
-
 import '../../../../../domain/entities/event_entity.dart';
 import '../../../../../domain/entities/news_entity.dart';
 import '../../event/view/event_student.dart';
+import '../../event/view/student_event_details.dart';
 import '../../news/view/news_view.dart';
 import '../view_model/st_home_tab_cubit.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
-
   @override
   State<HomeTab> createState() => _HomeTabState();
 }
@@ -113,6 +112,7 @@ class _HomeTabState extends State<HomeTab> {
 
   Widget _buildNewsCard(NewsEntity news, StHomeTabCubit cubit) {
     return Container(
+      width: 200,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.grey[100],
@@ -218,7 +218,7 @@ class _HomeTabState extends State<HomeTab> {
           ),
           const SizedBox(height: 20),
           CircleAvatar(
-            radius: 180,
+            radius: 160,
             backgroundColor: Colors.transparent,
             backgroundImage: AssetImage(
               'assets/images/logo_9.png',
@@ -237,7 +237,18 @@ class _HomeTabState extends State<HomeTab> {
               itemCount: cubit.events.length,
               separatorBuilder: (_, __) => const SizedBox(width: 12),
               itemBuilder:
-                  (_, index) => _buildEventCard(cubit.events[index], cubit),
+                  (_, index) => InkWell(
+                      onTap: () {
+                        if(index==0){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StudentEventDetails(),
+                            ),
+                          );
+                        }
+                      },
+                      child: _buildEventCard(cubit.events[index], cubit)),
             ),
           ),
           const SizedBox(height: 20),
@@ -246,13 +257,16 @@ class _HomeTabState extends State<HomeTab> {
 
           }),
           const SizedBox(height: 10),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: cubit.news.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (_, index) => _buildNewsCard(cubit.news[index], cubit),
+          SizedBox(
+            height: 140,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: cubit.news.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (_, index) => _buildNewsCard(cubit.news[index], cubit),
+            ),
           ),
+          SizedBox(height: 20,)
         ],
       ),
     );

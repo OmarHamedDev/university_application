@@ -67,7 +67,7 @@ class _EventStudent extends State<EventStudent> {
                   separatorBuilder: (context, index) => SizedBox(width: 12),
                   itemCount: eventCubit.events.length,
                   itemBuilder: (context, index) {
-                    return EventCard(event: eventCubit.events[index]);
+                    return EventCard(event: eventCubit.events[index],index: index,);
                   },
                 ),
               );
@@ -81,19 +81,22 @@ class _EventStudent extends State<EventStudent> {
 
 class EventCard extends StatelessWidget {
   final EventEntity event;
-  const EventCard({super.key, required this.event});
+  final int index;
+  const EventCard({super.key, required this.event,required this.index});
 
   @override
   Widget build(BuildContext context) {
     var eventCubit = context.read<EventCubit>();
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StudentEventDetails(),
-          ),
-        );
+       if(index==0){
+         Navigator.push(
+           context,
+           MaterialPageRoute(
+             builder: (context) => StudentEventDetails(),
+           ),
+         );
+       }
       },
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 10),

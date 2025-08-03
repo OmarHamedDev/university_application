@@ -1,10 +1,7 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hti_university_app_1/dependency_inversion/di.dart';
-import 'package:hti_university_app_1/features/presentation/home/st_home/news/view/student_news_details.dart';
-
-import '../../../../../../core/utils/dialogs/awesome_dialoge.dart';
 import '../../../../../../core/utils/functions/handle_state/handle_state.dart';
 import '../view_model/news_cubit.dart';
 
@@ -110,64 +107,54 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = context.read<NewsCubit>();
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StudentNewsDetails(),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(content, style: const TextStyle(fontSize: 13)),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      cubit.formatISOTime(time),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(content, style: const TextStyle(fontSize: 13)),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        cubit.formatISOTime(time),
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
-            // Positioned(
-            //   top: 0,
-            //   right: 0,
-            //   child: GestureDetector(
-            //     onTap: onDelete,
-            //     child: const Icon(Icons.close, color: Colors.red),
-            //   ),
-            // ),
-          ],
-        ),
+          ),
+          // Positioned(
+          //   top: 0,
+          //   right: 0,
+          //   child: GestureDetector(
+          //     onTap: onDelete,
+          //     child: const Icon(Icons.close, color: Colors.red),
+          //   ),
+          // ),
+        ],
       ),
     );
   }

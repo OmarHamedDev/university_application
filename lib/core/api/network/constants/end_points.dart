@@ -1,4 +1,5 @@
 class EndPoints {
+  static const String baseUrl = "https://mobcity.net/laravel_api/public/api/";
   static const String login = "login";
   static const String news = "news";
   static const String adminStudentRequestsPending = "admin/student-requests/pending";
@@ -19,4 +20,6 @@ class EndPoints {
   static const String request = "requests"; //اس
   static const String questions = "chatbot/questions";
   static const String answer = "chatbot/answer";
+  static const String notification = "${baseUrl}notifications/feed";
+  static const String graduate = "${baseUrl}graduates";
 }

@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hti_university_app_1/core/extension/extension.dart';
@@ -24,6 +25,7 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  bool obscure=true;
   var loginViewModel = getIt.get<LoginCubit>();
 
   @override
@@ -70,10 +72,16 @@ class _LogInScreenState extends State<LogInScreen> {
                     SizedBox(height: 30),
                     CustomTextField(
                       label: Text("Enter your password"),
-                      suffix: Icon(Icons.remove_red_eye_outlined),
+                      suffix: InkWell(
+                          onTap: () {
+                            setState(() {
+                              obscure=!obscure;
+                            });
+                          },
+                          child: obscure?Icon(CupertinoIcons.eye_slash_fill):Icon(Icons.remove_red_eye_outlined)),
                       hintText: "********",
                       mycontroller: loginViewModel.passwordController,
-                      obscureText: false,
+                      obscureText: obscure,
                     ),
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.end,

@@ -11,6 +11,7 @@ import 'dependency_inversion/di.dart';
 import 'features/auth/Verify_Password_Screen.dart';
 import 'features/auth/forget_password_one.dart';
 import 'features/presentation/home/ad_home/requests/view/confirm_requests_admin.dart';
+import 'features/presentation/home/st_home/menua/graduate/graduate.dart';
 import 'features/presentation/login/view/log_in.dart';
 import 'features/auth/reset_password.dart';
 import 'features/data/data_source/offline_data_source/model/app_user_local_model/app_user_local_model.dart';
@@ -18,7 +19,7 @@ import 'features/home/admin_home_screen.dart';
 import 'features/home/std_home_screen.dart';
 import 'features/home/std_home_tabs/menu_items/documents.dart';
 import 'features/home/std_home_tabs/menu_items/profile.dart';
-import 'features/home/std_home_tabs/notification_tab.dart';
+import 'features/home/std_home_tabs/notification/notification_tab.dart';
 import 'features/on_boarding/on_boarding_screen.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
           AdminHomeScreen.routeName: (context) => AdminHomeScreen(),
           ConfirmRequestsAdmin.routeName: (context) => ConfirmRequestsAdmin(),
           RejectReason.routeName: (context) => RejectReason(),
+          GraduateScreen.routeName: (context) => GraduateScreen(),
         },
 
     );

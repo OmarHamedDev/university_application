@@ -69,7 +69,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     children: [
                       Image.asset(
                         images[index],
-                        height: height * 0.5,
+                        height: height * 0.3,
                         width: double.infinity,
                         fit: BoxFit.fill,
                       ),

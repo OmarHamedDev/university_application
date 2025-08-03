@@ -1,0 +1,325 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hti_university_app_1/core/api/addition/serviceApi.dart';
+import 'package:hti_university_app_1/core/utils/constants/App_colors.dart';
+import 'package:hti_university_app_1/core/widgets/cached_network_image_widget.dart';
+import 'package:hti_university_app_1/features/data/repositories_impl/graduates_repo_imp.dart';
+import 'package:hti_university_app_1/features/presentation/home/st_home/menua/graduate/cubit/graduations_cubit.dart';
+import 'package:hti_university_app_1/features/presentation/home/st_home/menua/graduate/model/GraduatesModel.dart';
+
+import 'model/GraduateModle.dart';
+
+class GraduateScreen extends StatelessWidget {
+  static const String routeName = "GraduateScreen";
+
+  const GraduateScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(create: (context) => GraduationsCubit(
+        GraduatesRepoImp(ServiceAPIs(Dio())))
+      ..graduates(),
+      child: BlocBuilder<GraduationsCubit, GraduationsState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(Icons.arrow_back_ios)),
+                  SizedBox(),
+                  const Text('About Graduates',
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w600)),
+                  Image.asset(
+                    "assets/images/logo_9.png", width: 37, height: 37,)
+                ],
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              elevation: 0,
+            ),
+            body: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.asset("assets/images/logo_9.png"),
+                Column(
+                  children: [
+                    SizedBox(height: 20,),
+                    Expanded(child: state is GraduationsLoading ? Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    ) : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ProfileList(allGraduates: GraduationsCubit
+                          .get(context)
+                          .allGraduates!),
+                    ))
+                  ],
+                ),
+              ],
+            ),
+          );
+        },),
+    );
+  }
+}
+
+class ProfileList extends StatelessWidget {
+  const ProfileList({super.key, required this.allGraduates});
+
+  final GraduatesModel allGraduates;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      separatorBuilder: (context, index) => SizedBox(height: 12,),
+      itemCount: allGraduates.data!.length,
+      itemBuilder: (context, index) {
+        final data = allGraduates.data?[index];
+        return ProfileCard(
+          id: data?.id.toString() ?? "",
+          imagePath: data?.photo ?? 'assets/images/negm.png',
+          name: data?.name ?? "",
+          title: data?.specialized ?? "",
+          description:
+          data?.profile ?? "",
+        );
+      },
+    );
+  }
+}
+
+class ProfileCard extends StatelessWidget {
+  final String imagePath, name, title, description, id;
+
+  const ProfileCard({
+    super.key,
+    required this.imagePath,
+    required this.name,
+    required this.title,
+    required this.description,
+    required this.id,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GraduationsCubit, GraduationsState>(
+      builder: (context, state) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade400,
+                blurRadius: 6,
+                offset: const Offset(4, 4),
+              ),
+              BoxShadow(
+                color: Colors.grey.shade400,
+                blurRadius: 6,
+                offset: const Offset(-4, -4),
+              )
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                ProfileImage(imagePath: imagePath),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ProfileDetails(
+                    name: name,
+                    title: title,
+                    description: description,
+                  ),
+                ),
+                ViewButton(graduate: GraduationsCubit
+                    .get(context)
+                    .graduate, id: id,),
+              ],
+            ),
+          ),
+        );
+      },);
+  }
+}
+
+class ProfileImage extends StatelessWidget {
+  final String imagePath;
+
+  const ProfileImage({super.key, required this.imagePath});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.network(
+        imagePath,
+        width: 80,
+        height: 100,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+}
+
+class ProfileDetails extends StatelessWidget {
+  final String name, title, description;
+
+  const ProfileDetails({
+    super.key,
+    required this.name,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(name,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(title,
+            style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        const SizedBox(height: 8),
+        Text(description,
+            style: const TextStyle(fontSize: 13),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis),
+      ],
+    );
+  }
+}
+
+class ViewButton extends StatelessWidget {
+  const ViewButton({super.key, required this.graduate, required this.id });
+
+  final GraduateModel? graduate;
+  final String id;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<GraduationsCubit, GraduationsState>(
+      builder: (context, state) {
+        return OutlinedButton(
+          onPressed: () {
+            showProfileBottomSheet(context, id: id);
+          },
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.blue),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30)),
+          ),
+          child: const Text('view', style: TextStyle(
+              color: Colors.blue
+          ),),
+        );
+      },);
+  }
+}
+
+void showProfileBottomSheet(BuildContext context, {required String id}) {
+  showModalBottomSheet(
+    backgroundColor: Colors.white,
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    isScrollControlled: true,
+    builder: (context) {
+      return BlocProvider(
+        create: (context) =>
+        GraduationsCubit(GraduatesRepoImp(ServiceAPIs(Dio())))
+          ..graduatesById(id: id)
+          ..graduates(),
+        child: BlocBuilder<GraduationsCubit, GraduationsState>(
+          builder: (context, state) {
+            final data = GraduationsCubit
+                .get(context)
+                .graduate
+                ?.data;
+            return state is GraduationLoading ? Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primary,
+              ),
+            ) : Padding(
+              padding: EdgeInsets.all(16),
+              child: SingleChildScrollView(
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                  Positioned(
+                  top: 15,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child:
+                    CachedNetworkImageWidget(
+                        imageUrl: data?.photo ?? '', width: 80, height: 100)
+                ),),
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const SizedBox(height: 16),
+                  _buildRow("Name:", data?.name ?? ""),
+                  _buildRow("Phone:", data?.phone ?? ""),
+                  _buildRow("Age:", data?.age ?? ""),
+                  _buildRow("Specialized:", data?.specialized ?? ""),
+                  _buildRow("Work in a company:", data?.company ?? ""),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Profile:",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    data?.profile ?? "",
+                    style: TextStyle(fontSize: 14, color: Colors.grey[800]),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+              ],
+            ),)
+            ,
+            );
+          },),
+      );
+    },
+  );
+}
+
+Widget _buildRow(String title, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(width: 20,),
+        Text(
+          value,
+          style: TextStyle(color: Colors.grey[800]),
+        ),
+      ],
+    ),
+  );
+}
