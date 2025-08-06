@@ -41,9 +41,7 @@ class _ChatbotState extends State<Chatbot> {
                 );
                 answeredIds.addAll(
                   context
-                      .read<ChatCubit>()
-                      .chats
-                      .where((chat) => chat.answer?.isNotEmpty ?? false)
+                      .read<ChatCubit>().chats.where((chat) => chat.answer?.isNotEmpty ?? false)
                       .map((chat) => chat.id!)
                       .toList(),
                 );
@@ -71,7 +69,7 @@ class _ChatbotState extends State<Chatbot> {
                   itemCount: chats.length,
                   itemBuilder: (context, index) {
                     final chat = chats[index];
-                    final isAnswered = answeredIds.contains(chat.id);
+                    bool isAnswered = answeredIds.contains(chat.id);
                     final isLoading = loadingIds.contains(chat.id);
 
                     return Column(
@@ -91,6 +89,7 @@ class _ChatbotState extends State<Chatbot> {
                               ),
                             ),
                             onPressed: () async {
+
                               if (chat.id != null &&
                                   !isAnswered &&
                                   !isLoading) {
@@ -100,6 +99,14 @@ class _ChatbotState extends State<Chatbot> {
                                 await context.read<ChatCubit>().answerQuestions(
                                   chat.id!.toString(),
                                 );
+                              }
+                              if(isAnswered){
+                                setState(() {
+                                  answeredIds.remove(chat.id);
+                                  context.read<ChatCubit>().chats[index].answer="";
+                                  loadingIds.remove(chat);
+                                  isAnswered= !isAnswered;
+                                });
                               }
                             },
                             child:

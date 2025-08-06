@@ -83,35 +83,35 @@ class _LogInScreenState extends State<LogInScreen> {
                       mycontroller: loginViewModel.passwordController,
                       obscureText: obscure,
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.end,
-                    //   children: [
-                    //     Padding(
-                    //       padding: const EdgeInsets.only(top: 4.0, right: 14),
-                    //       child: InkWell(
-                    //         onTap: () {
-                    //           Navigator.pushNamed(
-                    //             context,
-                    //             ForgetPasswordOne.routeName,
-                    //           );
-                    //         },
-                    //         child: Column(
-                    //           children: [
-                    //             Text(
-                    //               textAlign: TextAlign.end,
-                    //               "Forgot password ?",
-                    //               style: TextStyle(
-                    //                 color: AppColors.primary,
-                    //                 fontSize: 15,
-                    //                 fontWeight: FontWeight.w500,
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0, right: 14),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                ForgetPasswordOne.routeName,
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  textAlign: TextAlign.end,
+                                  "Forgot password ?",
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 50),
                     NextButton(
                       onTap: () {
@@ -156,9 +156,7 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   dynamic _handleBlocListenerLoginState(LoginState state) {
-    if (state is LoginLoadingState) {
-      LoadingDialog.showLoadingDialog(context);
-    } else if (state is LoginSuccessState) {
+     if (state is LoginSuccessState) {
       LoadingDialog.hideLoadingDialog(context);
       loginViewModel.doAction(NavigateToBaseScreenAction());
     } else if (state is LoginFailuresState) {

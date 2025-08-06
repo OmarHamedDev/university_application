@@ -88,8 +88,7 @@ abstract class ApiManger {
   Future<String> deletePhoto();
   @GET(EndPoints.profile)
   Future<User> getProfile();
-  @POST(EndPoints.sendCode)
-  Future<String> sendCode(@Body() Map<String, dynamic> body);
+
 
   @POST(EndPoints.events)
   @MultiPart()

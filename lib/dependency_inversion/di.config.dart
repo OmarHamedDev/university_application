@@ -293,7 +293,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i626.RequestStudnetCubit>(() =>
         _i626.RequestStudnetCubit(gh<_i485.GetAllRequestsTypeAdminUseCase>()));
     gh.factory<_i240.LoginCubit>(
-        () => _i240.LoginCubit(gh<_i434.LoginUseCase>()));
+        () => _i240.LoginCubit(loginUseCase:  gh<_i434.LoginUseCase>()));
     gh.factory<_i454.GetProfileUseCase>(() =>
         _i454.GetProfileUseCase(authRepository: gh<_i858.AuthRepository>()));
     gh.factory<_i207.LogoutUseCase>(

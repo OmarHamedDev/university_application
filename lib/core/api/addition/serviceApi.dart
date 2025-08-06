@@ -50,4 +50,67 @@ class ServiceAPIs{
     );
     return response;
   }
+  Future<Response> sendCode({required String email}) async {
+    final response = dio.post(
+       EndPoints.pass,
+      data: {
+         "email":email
+      },
+      options: Options(
+      method: "POST",
+      headers: {
+        "Accept": "application/json", "type": "text"},
+
+      ),
+    );
+    return response;
+  }
+  Future<Response> verifyCode({required String email,required String code}) async {
+    final response = dio.post(
+       EndPoints.pass,
+      data: {
+         "email":email
+      },
+      options: Options(
+      method: "POST",
+      headers: {
+        "Accept": "application/json", "type": "text"},
+
+      ),
+    );
+    return response;
+  }
+  Future<Response> resetPass({required String email,required String code,required String pass,required String confirmPass}) async {
+    final response = dio.post(
+       EndPoints.resetPass,
+      data: {
+         "email":email,
+         "code":code,
+         "password":pass,
+         "password_confirmation":confirmPass,
+      },
+      options: Options(
+      method: "POST",
+      headers: {
+        "Accept": "application/json", "type": "text"},
+
+      ),
+    );
+    return response;
+  }
+  // Future<Response> geteventById({required String id}) async {
+  //   String ? token=await getIt.get<CachingDataSecureStorage>().readData(key:CacheKeys.token);
+  //   final response = dio.get(
+  //     "${EndPoints.graduate}/$id",
+  //     options: Options(
+  //       method: "GET",
+  //       headers: {
+  //         "Authorization":"Bearer $token",
+  //         "Accept": "application/json", "type": "text"},
+  //
+  //     ),
+  //   );
+  //   return response;
+  // }
+
 }

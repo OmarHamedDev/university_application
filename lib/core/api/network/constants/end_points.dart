@@ -10,9 +10,6 @@ class EndPoints {
   static const String profile = "profile";
   static const String uploadPhoto = "profile/photo";
   static const String logout = "logout";
-  static const String sendCode = "password/send-code";
-  static const String verifyCode = "password/verify-code";
-  static const String resetPassword = "password/verify-code";
   static const String uploadExcel = "admin/import-users";
   static const String createStudentUser = "admin/create-user";
   static const String studentRequest = "student-requests";
@@ -22,4 +19,6 @@ class EndPoints {
   static const String answer = "chatbot/answer";
   static const String notification = "${baseUrl}notifications/feed";
   static const String graduate = "${baseUrl}graduates";
+  static const String pass = "${baseUrl}password/send-code";
+  static const String resetPass = "${baseUrl}password/reset";
 }

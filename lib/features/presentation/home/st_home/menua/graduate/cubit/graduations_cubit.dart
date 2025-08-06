@@ -31,6 +31,7 @@ class GraduationsCubit extends Cubit<GraduationsState> {
     if (kDebugMode) {
       print(graduate?.data);
     }
-    emit(GraduationSuc());
+    Future.delayed(Duration(seconds: 1),
+    () => emit(GraduationSuc()),);
   }
 }

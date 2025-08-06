@@ -8,6 +8,7 @@ import '../../event/view/event_student.dart';
 import '../../event/view/student_event_details.dart';
 import '../../news/view/news_view.dart';
 import '../view_model/st_home_tab_cubit.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -58,7 +59,7 @@ class _HomeTabState extends State<HomeTab> {
         borderRadius: BorderRadius.circular(12),
         color: Colors.grey[200],
         image: DecorationImage(
-          image: AssetImage('assets/images/Frame 1268 (1).png'), // صورة المبنى
+          image: NetworkImage(event.image), // صورة المبنى
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
             Colors.black.withOpacity(0.2),
@@ -157,26 +158,6 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
-  Widget _handleBlocBuilder(StHomeTabCubit cubit, StHomeTabState state) {
-      if (state is StHomeTabEventsLoadingState || state is StHomeTabNewsLoadingState) {
-        return HandleState.loading();
-      }
-
-      if (state is StHomeTabEventsErrorState || state is StHomeTabNewsErrorState) {
-        final exception = (state as dynamic).exception;
-        return HandleState.error(exception, context);
-      }
-
-      if (cubit.events.isEmpty || cubit.news.isEmpty) {
-        return HandleState.emptyList(
-          child: const Text("Home Data Empty List"),
-          list: [],
-        );
-      }
-
-      return _buildBodySuccessWidget(cubit);
-  }
-
   Widget _buildBodySuccessWidget(StHomeTabCubit cubit) {
     return SafeArea(
       child: ListView(
@@ -226,11 +207,11 @@ class _HomeTabState extends State<HomeTab> {
           ),
 
           // Events Section
-          _buildSectionHeader('Events', 'See all',() {
+          cubit.events.isEmpty?SizedBox():_buildSectionHeader('Events', 'See all',() {
             Navigator.push(context, MaterialPageRoute(builder: (context) => EventStudent(),));
           },),
           const SizedBox(height: 10),
-          SizedBox(
+          cubit.events.isEmpty?SizedBox():SizedBox(
             height: 180,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
@@ -238,26 +219,26 @@ class _HomeTabState extends State<HomeTab> {
               separatorBuilder: (_, __) => const SizedBox(width: 12),
               itemBuilder:
                   (_, index) => InkWell(
-                      onTap: () {
-                        if(index==0){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => StudentEventDetails(),
-                            ),
-                          );
-                        }
-                      },
-                      child: _buildEventCard(cubit.events[index], cubit)),
+                  onTap: () {
+                    if(index==0){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StudentEventDetails(),
+                        ),
+                      );
+                    }
+                  },
+                  child: _buildEventCard(cubit.events[index], cubit)),
             ),
           ),
           const SizedBox(height: 20),
-          _buildSectionHeader('News:', 'See all',() {
+          cubit.news.isEmpty?SizedBox():_buildSectionHeader('News:', 'See all',() {
             Navigator.push(context, MaterialPageRoute(builder: (context) => NewsView(),));
 
           }),
           const SizedBox(height: 10),
-          SizedBox(
+          cubit.news.isEmpty?SizedBox():SizedBox(
             height: 140,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
@@ -268,6 +249,161 @@ class _HomeTabState extends State<HomeTab> {
           ),
           SizedBox(height: 20,)
         ],
+      ),
+    );
+  }
+
+  Widget _handleBlocBuilder(StHomeTabCubit cubit, StHomeTabState state) {
+      if (state is StHomeTabEventsLoadingState || state is StHomeTabNewsLoadingState) {
+        return SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              // Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Higher Technological Institute',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 4),
+                      Text.rich(
+                        TextSpan(
+                          text: 'Department : ',
+                          style: TextStyle(color: Colors.black54),
+                          children: [
+                            TextSpan(
+                              text: 'Computer Science',
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage('assets/images/hti_logo.png'),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+              const CircleAvatar(
+                radius: 160,
+                backgroundColor: Colors.transparent,
+                backgroundImage: AssetImage('assets/images/logo_9.png'),
+              ),
+
+              // Events Section
+              _buildSectionHeader('Events', 'See all', () {}),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 180,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 4,
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  itemBuilder: (_, __) => buildEventCardShimmer(),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // News Section
+              _buildSectionHeader('News:', 'See all', () {}),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 140,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 4,
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  itemBuilder: (_, __) => buildNewsCardShimmer(),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      }
+
+      if (state is StHomeTabEventsErrorState || state is StHomeTabNewsErrorState) {
+        final exception = (state as dynamic).exception;
+        return HandleState.error(exception, context);
+      }
+
+      return _buildBodySuccessWidget(cubit);
+  }
+
+  Widget buildEventCardShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: 160,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.grey[300],
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(height: 16, width: 100, color: Colors.white),
+            const SizedBox(height: 4),
+            Container(height: 12, width: 120, color: Colors.white),
+            const Spacer(),
+            Row(
+              children: [
+                CircleAvatar(radius: 12, backgroundColor: Colors.white),
+                const Spacer(),
+                Container(height: 10, width: 40, color: Colors.white),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNewsCardShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: 200,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(height: 14, width: 100, color: Colors.white),
+                  const SizedBox(height: 4),
+                  Container(height: 12, width: double.infinity, color: Colors.white),
+                  const SizedBox(height: 4),
+                  Container(height: 12, width: 140, color: Colors.white),
+                  const SizedBox(height: 8),
+                  Container(height: 10, width: 60, color: Colors.white),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            CircleAvatar(radius: 20, backgroundColor: Colors.white),
+          ],
+        ),
       ),
     );
   }

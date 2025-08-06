@@ -8,6 +8,7 @@ import 'package:hti_university_app_1/core/widgets/cached_network_image_widget.da
 import 'package:hti_university_app_1/features/data/repositories_impl/graduates_repo_imp.dart';
 import 'package:hti_university_app_1/features/presentation/home/st_home/menua/graduate/cubit/graduations_cubit.dart';
 import 'package:hti_university_app_1/features/presentation/home/st_home/menua/graduate/model/GraduatesModel.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'model/GraduateModle.dart';
 
@@ -52,10 +53,10 @@ class GraduateScreen extends StatelessWidget {
                 Column(
                   children: [
                     SizedBox(height: 20,),
-                    Expanded(child: state is GraduationsLoading ? Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ),
+                    Expanded(child: state is GraduationsLoading ?ListView.separated(
+                      itemCount: 5, // عدد العناصر الوهمية
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (_, __) => const ShimmerProfileCard(),
                     ) : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: ProfileList(allGraduates: GraduationsCubit
@@ -242,19 +243,12 @@ void showProfileBottomSheet(BuildContext context, {required String id}) {
       return BlocProvider(
         create: (context) =>
         GraduationsCubit(GraduatesRepoImp(ServiceAPIs(Dio())))
-          ..graduatesById(id: id)
-          ..graduates(),
+          ..graduatesById(id: id),
         child: BlocBuilder<GraduationsCubit, GraduationsState>(
           builder: (context, state) {
-            final data = GraduationsCubit
-                .get(context)
-                .graduate
-                ?.data;
-            return state is GraduationLoading ? Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primary,
-              ),
-            ) : Padding(
+            final data = GraduationsCubit.get(context).graduate?.data;
+            return state is GraduationLoading ? buildProfileShimmer():
+            Padding(
               padding: EdgeInsets.all(16),
               child: SingleChildScrollView(
                 child: Stack(
@@ -323,3 +317,207 @@ Widget _buildRow(String title, String value) {
     ),
   );
 }
+
+Widget buildProfileShimmer() {
+  return Padding(
+    padding: const EdgeInsets.all(16),
+    child: SingleChildScrollView(
+      child: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          // صورة البروفايل
+          Positioned(
+            top: 15,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                width: 80,
+                height: 100,
+                color: Colors.grey[300],
+              ),
+            ),
+          ),
+
+          // باقي التفاصيل
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(height: 16),
+              _buildShimmerRow(),
+              _buildShimmerRow(),
+              _buildShimmerRow(),
+              _buildShimmerRow(),
+              _buildShimmerRow(),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 80,
+                    height: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              _buildShimmerParagraph(),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+// صف واحد مثل: Name: ----------
+Widget _buildShimmerRow() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Row(
+      children: [
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+            color: Colors.white,
+              borderRadius: BorderRadius.circular(12)
+            ),
+            width: 60,
+            height: 14,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: 150,
+            height: 14,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12)
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+// فقرة طويلة مثل الـ Profile
+Widget _buildShimmerParagraph() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: List.generate(4, (index) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            width: double.infinity,
+            height: 12,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12)
+            ),
+          ),
+        ),
+      );
+    }),
+  );
+}
+
+
+
+class ShimmerProfileCard extends StatelessWidget {
+  const ShimmerProfileCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 6,
+            offset: const Offset(4, 4),
+          ),
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 6,
+            offset: const Offset(-4, -4),
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // صورة وهمية
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 80,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+
+            // تفاصيل وهمية
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(3, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        height: 12 + index * 2,
+                        width: double.infinity,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+
+            // زر وهمي
+            const SizedBox(width: 12),
+            Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                width: 60,
+                height: 30,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

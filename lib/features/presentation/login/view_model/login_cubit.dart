@@ -1,5 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hti_university_app_1/features/auth/Verify_Password_Screen.dart';
+import 'package:hti_university_app_1/features/auth/reset_password.dart';
+import 'package:hti_university_app_1/features/data/repositories_impl/forget_pass_repo_imp.dart';
+import 'package:hti_university_app_1/features/presentation/login/view/log_in.dart';
 import 'package:injectable/injectable.dart';
 import '../../../../core/api/network/common/result.dart';
 import '../../../../core/api/network/error/error_handler.dart';
@@ -12,9 +17,10 @@ part 'login_state.dart';
 
 @injectable
 class LoginCubit extends Cubit<LoginState> {
-  final LoginUseCase loginUseCase;
-  LoginCubit(this.loginUseCase) : super(LoginInitial());
-
+  final LoginUseCase? loginUseCase;
+  final ForgetPassRepoImp? forgetPassRepoImp;
+  LoginCubit({this.loginUseCase,this.forgetPassRepoImp}) : super(LoginInitial());
+  static LoginCubit get(context)=>BlocProvider.of(context);
   Future<void> doAction(LoginAction loginActionView) async {
     switch (loginActionView) {
       case ButtonLoginAction():
@@ -63,7 +69,7 @@ class LoginCubit extends Cubit<LoginState> {
     LoginRequest loginRequest = LoginRequest(
         email: emailController.text.trim(),
         password: passwordController.text.trim());
-    var result = await loginUseCase.invoke(loginRequest: loginRequest);
+    var result = await loginUseCase!.invoke(loginRequest: loginRequest);
     switch (result) {
       case Success<AppUserEntity>():
         emit(LoginSuccessState());
@@ -72,6 +78,25 @@ class LoginCubit extends Cubit<LoginState> {
             errorMassage: ErrorHandler.formException(result.exception).errorMassage));
     }
   }
+  Future<void> sendCode(BuildContext context,{required String email}) async {
+    emit(LoginLoadingState());
+    final result = await forgetPassRepoImp!.sendCode(email: email);
+    Navigator.push(context,MaterialPageRoute(builder: (context) => VerifyPasswordScreen(email: email,)));
+        emit(LoginSuccessState());
+    }
+  Future<void>verifyCode(BuildContext context,{required String email,required String code}) async {
+    emit(LoginLoadingState());
+    final result = await forgetPassRepoImp!.verifyCode(email: email, code: code);
+    Navigator.push(context, MaterialPageRoute(builder:(context) => ResetPassword(email: email,code: code)));
+        emit(LoginSuccessState());
+    }
+  Future<void>resetPass(BuildContext context,{required String email,required String code,required String pass,required String confirmPass}) async {
+    emit(LoginLoadingState());
+    final result = await forgetPassRepoImp!.resetPass(email: email, code: code, pass: pass, confirmPass: confirmPass);
+    Navigator.pushNamedAndRemoveUntil(context,LogInScreen.routeName,(route) => false,);
+        emit(LoginSuccessState());
+    }
+
 
   void _navigateToRegisterScreen() {
     emit(NavigateToRegisterScreenState());

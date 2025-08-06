@@ -167,16 +167,16 @@ class RequestCard1 extends StatelessWidget {
 
             SizedBox(height: 8),
 
-            /// صورة الإيصال (لو موجودة)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                "https://mobcity.net/laravel_api/public/storage/receipts/P1XTAtLDoZP42TTi9qCfVvshdqx7ZfgFkflNaqes.png",
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
+            // /// صورة الإيصال (لو موجودة)
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(10),
+            //   child: Image.network(
+            //     "https://mobcity.net/laravel_api/public/storage/receipts/P1XTAtLDoZP42TTi9qCfVvshdqx7ZfgFkflNaqes.png",
+            //     height: 150,
+            //     width: double.infinity,
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
 
             SizedBox(height: 12),
 
